@@ -1,4 +1,7 @@
 #%%
+# -*- SN Prescription and Post-SN Orbital Dynamics -*-
+# Copyright (c) 2023 Ashwathi Nair
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
@@ -58,24 +61,16 @@ def predict_neutron_star_mass(core_mass_CO, helium_envelope_mass):
         remnant_type = 'BH'
     
     # Calculate remnant mass
-    # if remnant_type == 'NS':
-    #     if core_mass_CO < M1:
-    #         remnant_mass = max(min(np.random.normal(µ1, σ1**2), MNS_max), MNS_min)
-    #     elif M1 <= core_mass_CO < M2:
-    #         µ = µ2a + µ2b * (core_mass_CO - M1) / (M2 - M1)
-    #         remnant_mass = max(min(np.random.normal(µ, σ2**2), MNS_max), MNS_min)
-    #     elif M2 <= core_mass_CO < M3:
-    #         µ = µ3a + µ3b * (core_mass_CO - M2) / (M3 - M2)
-    #         remnant_mass = max(min(np.random.normal(µ, σ3**2), MNS_max), MNS_min)
+    
     if remnant_type == 'NS':
         if core_mass_CO < M1:
-            remnant_mass = (np.random.normal(µ1, σ1**2))#, MNS_max), MNS_min)
+            remnant_mass = max(min(np.random.normal(µ1, σ1), MNS_max), MNS_min)
         elif M1 <= core_mass_CO < M2:
             µ = µ2a + µ2b * (core_mass_CO - M1) / (M2 - M1)
-            remnant_mass = (np.random.normal(µ, σ2**2))#, MNS_max), MNS_min)
+            remnant_mass =  max(min(np.random.normal(µ, σ2), MNS_max), MNS_min)
         elif M2 <= core_mass_CO < M3:
             µ = µ3a + µ3b * (core_mass_CO - M2) / (M3 - M2)
-            remnant_mass = (np.random.normal(µ, σ3**2))#, MNS_max), MNS_min)                           
+            remnant_mass =  max(min(np.random.normal(µ, σ3), MNS_max), MNS_min)                          
     else:
         if core_mass_CO >= M4:
             remnant_mass = core_mass_CO
@@ -88,30 +83,20 @@ def predict_neutron_star_mass(core_mass_CO, helium_envelope_mass):
     
     # Kick velocity for neutron stars
     if remnant_type == 'NS':
-       #if 1.37 <= core_mass_CO <= 1.44:
-        # Electron Capture SN (ECSN) condition: set kick to 10 km/s
-        #kick_velocity = 30
-       #else:
-           kick_velocity = -1 # SPENCER ADDED THIS
+        # Calculate the kick velocity
+           kick_velocity = -1 # Initialize kick_velocity to a negative value
            while kick_velocity <= 0:
                kick_velocity = vNS * (core_mass_CO - remnant_mass) / remnant_mass
                kick_velocity *= np.random.normal(1, σkick)  # Apply fractional kick scatter
-
-        # Ultra-Stripped SN (USSN) condition: if helium envelope is <= 0.2 Msun
-        # and not in ECSN range, reduce kick by factor of 5
-           #if helium_envelope_mass <= 0.2 and not (1.37 <= core_mass_CO <= 1.44):
-            # kick_velocity /= 3
-             
-           #if core_mass_CO >= 1.9:
-           # kick_velocity *= 3   
     else:
         kick_velocity = vBH * max(core_mass_CO - remnant_mass, 0)/remnant_mass
         
-    #print(f"vkick {kick_velocity:.2f}")
     # Return remnant type, the predicted mass, and the predicted kick velocity
     return remnant_type, remnant_mass, kick_velocity
 
-# Function to calculate the change in orbital semi-major axis and eccentricity
+# Function to calculate the change in orbital semi-major axis and eccentricity from Brandt & Podsiadlowski (1995)
+# Reference: Brandt, T. D., & Podsiadlowski, P. (1995). The effect of a supernova explosion on the orbital parameters of a binary system. Monthly Notices of the Royal Astronomical Society, 274(1), 46-54.
+
 def calculate_change_in_semimajor_axis_and_eccentricity(ai, vkick, phi, theta, m1co, m1, m2):
     
     
@@ -141,15 +126,6 @@ def calculate_change_in_semimajor_axis_and_eccentricity(ai, vkick, phi, theta, m
     # Determine if the system remains bound
     bound = bound_condition and kick_direction_condition
     
-    # kick direction condition always false when we have 100 samples, but true 1/10 times when have  1000 or 5000! 
-    #print("-----")
-    #print(kick_direction_condition)
-    
-    #print(vkick, vorb)
-    #print(f"Phi: {phi} theta: {theta}, vbar: {vbar}, mbardecval: {mbar.decompose().value}")
-    #print(" ")
-    
-    
     return af, e, bound  # Return af in the same units as ai
 
 # Constants
@@ -162,8 +138,8 @@ num_samples = 1000  # Number of random directions
 np.random.seed(42)  # For reproducibility
 m2 = 1.4 * M_sun  # Mass of the companion star
 
-# Specify the initial masses and periods you are interested in
-desired_masses = [10.0] # Add other masses if needed
+# Specify the initial masses and periods you are interested in . Feel free to change how you handle mass and orbital period
+desired_masses = [10.0]
 desired_periods = ['0.0625', '0.0833', '0.1041', '0.145', '0.208', '0.2917', '0.4', '0.6', '0.8', '1', '1.5', '2', '3','4', '6', '8', '10', '15', '20', '25', '30', '100']
 
 # Define period colors
@@ -193,7 +169,6 @@ period_colors = {
 }
 
 # Lists to store results
-# Lists to store results
 results_by_period = {period: {'orbital_periods': [], 'eccentricities': [], 'remnant_masses': [], 'kick_velocities': []} for period in period_colors}
 orbital_periods = []
 eccentricities = []
@@ -204,7 +179,6 @@ kick_velocities = []
 total_masses = []
 initial_star_masses=[]
 
-# Loop through each .data file in the directory
 for file_name in os.listdir(data_directory):
     if file_name.endswith('.data'):
         # Extract mass and period from file name
@@ -221,12 +195,7 @@ for file_name in os.listdir(data_directory):
             
             if period in period_colors:
                 helium_envelope_mass = final_star_mass - final_CO
-                #remnant_type, remnant_mass, vkick = predict_neutron_star_mass(final_CO, helium_envelope_mass)
-                #print ({remnant_mass})
-                #total_mass = m2.to(u.Msun).value + remnant_mass
-                #print (f"remnant masses {remnant_mass}")
-                #print (f"m2 {m2}")
-               
+            
                 phi_values = np.random.uniform(0, 2 * np.pi, num_samples)
                 z_values = np.random.uniform(-1, 1, num_samples)
                 theta_values = np.arccos(z_values)
@@ -248,11 +217,6 @@ for file_name in os.listdir(data_directory):
                        if bound:
                         
                             orbital_period = np.sqrt((4 * np.pi**2 * af**3) / (G * (remnant_mass * M_sun + m2))).to(u.day)# Calculate orbital period and convert to days
-                            
-                            #if orbital_period.value > 20:
-                                 #if not printedB:
-                                     #print("Wide orbit system found with Porb > 20 days!")
-                                     #printedB = True
                             results_by_period[period]['orbital_periods'].append(orbital_period.value)
                             results_by_period[period]['eccentricities'].append(e)
                             results_by_period[period]['remnant_masses'].append(remnant_mass)
@@ -264,8 +228,6 @@ for file_name in os.listdir(data_directory):
                             initial_star_masses.append(initial_star_mass)
                             total_masses.append(total_mass)
 
-#wide_orbits_count = sum(1 for p in orbital_periods if p > 20)
-#print(f"Number of systems with Porb > 20 days: {wide_orbits_count}")
 
 print(len(orbital_periods), len(eccentricities), len(remnant_masses), len(kick_velocities), len(initial_star_masses), len(total_masses))
                       
@@ -321,8 +283,6 @@ DPI = 800
 plot_filename = os.path.join(plot_output_directory, f'data_{desired_masses[0]:.1f}Msun.png')
 plt.savefig(plot_filename, dpi=DPI)
 print(f"Plot saved as {plot_filename}")
-# Close the plot to prevent overlap in the next iteration
-#plt.close()
 
 
 
