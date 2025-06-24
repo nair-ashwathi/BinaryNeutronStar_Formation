@@ -245,9 +245,8 @@ csv_filename = os.path.join(csv_directory, f'data_{desired_masses[0]:.1f}.csv')
 df.to_csv(csv_filename, index=False)
 print(f"Data saved as {csv_filename}") 
 print(f"total masses") 
-dns_orbital_periods = [0.078, 0.184, 0.102, 0.102, 0.323, 0.206, 0.38, 0.32, 0.421, 3.67, 1.176, 4.072, 0.613, 0.632, 1.816, 2.043, 2.616, 45.06, 13.638, 18.779, 8.634, 8.984, 13.638, 14.45, 0.166, 9.696, 10.592]  # Replace with your list of DNS orbital periods
-dns_eccentricities = [0.064, 0.606, 0.088, 0.088, 0.617, 0.090, 0.586, 0.181, 0.274, 0.26, 0.139, 0.113, 0.208, 0.348, 0.064, 0.308, 0.17, 0.399, 0.304, 0.828, 0.249, 0.228, 0.304, 0.366, 0.085, 0.089, 0.601]  # Replace with your list of DNS eccentricities
-
+dns_orbital_periods = [0.078, 0.184, 0.102, 0.102, 0.323, 0.206, 0.38, 0.32, 0.421, 3.67, 1.176, 4.072, 0.613, 0.632, 1.816, 2.043, 2.616, 45.06, 13.638, 18.779, 8.634, 8.984, 13.638, 14.45, 0.166, 9.696, 10.592]
+dns_eccentricities = [0.064, 0.606, 0.088, 0.088, 0.617, 0.090, 0.586, 0.181, 0.274, 0.26, 0.139, 0.113, 0.208, 0.348, 0.064, 0.308, 0.17, 0.399, 0.304, 0.828, 0.249, 0.228, 0.304, 0.366, 0.085, 0.089, 0.601]
 plt.style.use(style.style1)
 sns.set(style="darkgrid")
 
@@ -277,10 +276,5 @@ plt.legend(fontsize = 2.5)
 plt.grid(True)
 plt.show()
 
-# Save each plot with a unique filename
-DPI = 800
-plot_filename = os.path.join(plot_output_directory, f'data_{desired_masses[0]:.1f}Msun.png')
-plt.savefig(plot_filename, dpi=DPI)
-print(f"Plot saved as {plot_filename}")
 
 
