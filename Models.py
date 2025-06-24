@@ -33,7 +33,7 @@ def predict_neutron_star_mass(core_mass_CO, helium_envelope_mass):
     µ1 = 1.2  # mean NS mass for MCO < M1
     σ1 = 0.02  # NS mass scatter for MCO < M1
     µ2a = 1.4  # NS mass offset for M1 ≤ MCO < M2
-    µ2b = 0.5  # NS mass scaling for M1 ≤ MCO < M2
+    µ2b = 0.5  # NS mass scaling for M1 ≤ MCO < M2 (play around with this to change the relationship between the co core masses and remnant masses)
     σ2 = 0.05  # NS mass scatter for M1 ≤ MCO < M2
     µ3a = 1.4  # NS mass offset for M2 ≤ MCO < M3
     µ3b = 0.4  # NS mass scaling for M2 ≤ MCO < M3
@@ -42,7 +42,7 @@ def predict_neutron_star_mass(core_mass_CO, helium_envelope_mass):
     σBH = 0.5  # BH mass scatter for M1 ≤ MCO < M4
     
     # Additional information for kick velocity
-    vNS = 400  # NS kick scaling prefactor in km/s
+    vNS = 400  # NS kick scaling prefactor in km/s (use 520/525 km/s to incorporate calibration by Kapil et.al)
     vBH = 200 #BH kick scaling factor in km/s
     σkick = 0.3  # Fractional kick scatter
     MNS_min = 1.13  # Minimal NS mass from core-collapse SN 
