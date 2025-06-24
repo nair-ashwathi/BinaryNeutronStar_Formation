@@ -270,7 +270,6 @@ plt.scatter(dns_orbital_periods, dns_eccentricities, color='gold', marker='p', s
 plt.xscale('log')
 plt.xticks(fontsize = 9)
 plt.yticks(fontsize = 9)
-#plt.yscale('log')
 plt.xlabel('Orbital Period (days)', fontsize = 10)
 plt.ylabel('Eccentricity', fontsize = 10)
 #plt.title('Eccentricity vs Orbital Period for {desired_masses} + 1.4 Msun NS with different orbital periods (Vk = 400 sigma = 0.3)')
@@ -285,9 +284,3 @@ plt.savefig(plot_filename, dpi=DPI)
 print(f"Plot saved as {plot_filename}")
 
 
-
-#%%
-# title
-
-#%%
-#%%
