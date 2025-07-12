@@ -1,0 +1,139 @@
+&star_job
+
+      show_log_description_at_start = .false.
+      save_model_when_terminate = .true.
+      save_model_filename = 'final.mod'
+      load_saved_model = .true.
+      load_model_filename = '2.5M_Hestar.mod'
+
+      pgstar_flag = .true.
+
+/ ! end of star_job namelist
+
+
+&kap
+      use_Type2_opacities = .true.
+      Zbase = 0.02
+
+/ ! end of kap namelist
+
+
+&controls
+
+      initial_z = 0.02
+      initial_y = 0.98
+      hot_wind_scheme = 'Dutch'
+      Dutch_scaling_factor = 0.8d0
+
+      okay_to_reduce_gradT_excess = .true.
+      gradT_excess_age_fraction = 0.99d0
+      gradT_excess_max_change = 0.001d0
+
+      max_num_profile_models = 1000
+      predictive_mix(1)= .true.
+      predictive_zone_type(1)= 'burn_He'
+      predictive_zone_loc(1) = 'shell'
+      predictive_bdy_loc(1) = 'any'
+      predictive_avoid_reversal(1) = 'he4'
+
+      ! check for retries as part of test_suite
+      ! you can/should delete this for use outside of test_suite
+      max_number_retries = 80
+
+      !max_model_number = 1000
+      !use_gold2_tolerances = .true.
+
+      extra_terminal_output_file = 'log1' 
+      log_directory = 'LOGS1'
+
+      profile_interval = 50
+      history_interval = 1
+      terminal_interval = 1
+      write_header_frequency = 10
+
+      ! timesteps
+      min_timestep_factor = 0.9
+      max_timestep_factor = 2d0
+      !backup_hold = 10
+      !retry_hold = 5
+      !redo_limit = -1
+      relax_hard_limits_after_retry = .false.
+      min_timestep_limit = 1d-16
+
+      max_logT_for_k_below_const_q = 100
+      max_q_for_k_below_const_q = 0.995
+      min_q_for_k_below_const_q = 0.995
+      max_logT_for_k_const_mass = 100
+      max_q_for_k_const_mass = 0.99
+      min_q_for_k_const_mass = 0.99
+
+      fix_eps_grav_transition_to_grid = .true.
+
+      max_model_number = 100000
+      max_number_retries = 1000
+      !max_age = 1.44670210e+06
+
+      delta_lgT_limit = 0.05d0
+      delta_lgT_hard_limit = 0.1d0
+      delta_lgT_limit_min_lgT = 5d0
+      delta_lgRho_limit = 0.1d0
+      delta_lgT_hard_limit = 0.05d0
+      delta_lgRho_limit_min_lgRho = 1d0
+
+
+      max_T_center_for_any_mass_loss = 2d29
+      max_T_center_for_full_mass_loss = 1d29
+      
+      use_ledoux_criterion = .true.
+      mixing_length_alpha = 2.0
+      alpha_semiconvection = 1d0
+      remove_small_D_limit = 1d-50
+      mixing_D_limit_for_log = 1d-50
+
+      remove_mixing_glitches = .false.
+
+      mesh_dlog_burn_c_dlogP_extra = 0.10
+      mesh_dlog_cc_dlogP_extra = 0.10
+      mesh_dlog_co_dlogP_extra = 0.10
+      mesh_dlog_oo_dlogP_extra = 0.10
+
+      mesh_logX_species(1) = 'c12'
+      mesh_logX_min_for_extra(1) = -2
+      mesh_dlogX_dlogP_extra(1) = 0.5
+      mesh_dlogX_dlogP_full_on(1) = 0
+      mesh_dlogX_dlogP_full_off(1) = -1
+
+      mesh_logX_species(2) = 'h1'
+      mesh_logX_min_for_extra(2) = -2
+      mesh_dlogX_dlogP_extra(2) = 0.5
+      mesh_dlogX_dlogP_full_on(2) = 0
+      mesh_dlogX_dlogP_full_off(2) = -1
+
+      mesh_logX_species(3) = 'he4'
+      mesh_logX_min_for_extra(3) = -2
+      mesh_dlogX_dlogP_extra(3) = 0.5
+      mesh_dlogX_dlogP_full_on(3) = 0
+      mesh_dlogX_dlogP_full_off(3) = -1
+
+      mesh_dlog_pp_dlogP_extra = 0.25
+      xa_mesh_delta_coeff(1) = 0.5
+      xa_mesh_delta_coeff(2) = 0.5
+      xa_mesh_delta_coeff(3) = 0.5
+
+
+      ! stop when the center mass fraction of h1 drops below this limit
+      !xa_central_lower_limit_species(1) = 'h1'
+      !xa_central_lower_limit(1) = 1d-2
+      
+     ! solver
+        ! options for energy conservation (see MESA V, Section 3)
+        energy_eqn_option = 'eps_grav'
+        use_gold_tolerances = .true.
+
+/ ! end of controls namelist
+
+
+&pgstar
+         
+
+/ ! end of pgstar namelist
